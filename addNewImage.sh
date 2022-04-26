@@ -7,7 +7,7 @@ NEW_IMAGE=$1
 IMAGE_PROJECT=$2
 USERNAME=leighw
 PAT=JYZpyhCYowd2zVDjoYrK
-IMAGE_SERVER_URL=https://imageserver.n8eu78rs3sm.us-south.codeengine.appdomain.cloud
+IMAGE_SERVER_URL=https://sai-image-server.n9q0ot2og27.us-south.codeengine.appdomain.cloud/
 
 echo
 echo "Updating image-server project: $IMAGE_PROJECT with image file: $NEW_IMAGE..."
