@@ -1,0 +1,13 @@
+{
+    "apikey": "irMjIpxqcXu-9U9cjdfYooqnmjNftJSkYUsRYn0Y-uGn",
+    "cos_hmac_keys": {
+      "access_key_id": "a4cfad8d201548fea97b1d9a182259c6",
+      "secret_access_key": "df4620f1ea1b0fca36fc9222cb954f3d98ecbfeb06e3ed78"
+    },
+    "endpoints": "https://control.cloud-object-storage.cloud.ibm.com/v2/endpoints",
+    "iam_apikey_description": "Auto-generated for key crn:v1:bluemix:public:cloud-object-storage:global:a/e97a8c01ac694e308ef3ad7795bcf65a:ed969687-417b-4997-b2b5-2f61485732eb:resource-key:a4cfad8d-2015-48fe-a97b-1d9a182259c6",
+    "iam_apikey_name": "image-server-credentials-object-reader",
+    "iam_role_crn": "crn:v1:bluemix:public:cloud-object-storage::::serviceRole:ObjectReader",
+    "iam_serviceid_crn": "crn:v1:bluemix:public:iam-identity::a/e97a8c01ac694e308ef3ad7795bcf65a::serviceid:ServiceId-b9b309d7-4415-43e2-bd8d-c3988f6e3188",
+    "resource_instance_id": "crn:v1:bluemix:public:cloud-object-storage:global:a/e97a8c01ac694e308ef3ad7795bcf65a:ed969687-417b-4997-b2b5-2f61485732eb::"
+  }

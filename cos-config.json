@@ -1,0 +1,4 @@
+{
+    "cos_endpoint_url":"s3.us-east.cloud-object-storage.appdomain.cloud",
+    "cos_bucket": "image-server-cos-standard-leighs-images"
+}

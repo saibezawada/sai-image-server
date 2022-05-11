@@ -1,16 +1,16 @@
-FROM node:16
+FROM node
 
-WORKDIR /app
+WORKDIR /opt/app-root
 
 COPY package*.json ./
-
-RUN npm install
-
 COPY . .
 COPY ./public/. /public/
 
-RUN ls -la /public/img/*
+RUN npm install --only=prod
+
+ENV NODE_ENV production
+ENV PORT 8080
 
 EXPOSE 8080
 
-CMD ["node", "app.js"]
+CMD ["npm", "start"]
