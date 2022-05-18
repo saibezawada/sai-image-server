@@ -9,6 +9,9 @@ const url = require('url');
 const quertstring = require('querystring');
 const bodyParser = require('body-parser');
 
+const creds = require('./image-store-creds.json');
+const cos_config = require('./cos-config.json');
+
 // create a new express server
 var app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -59,16 +62,23 @@ app.listen(port, () => {
 async function image_lookup(params){
   // establish connection to IBM Cloud Object Storage (COS)
   const COS = require('ibm-cos-sdk');
-  let s3Options;
-  s3Options = {
-      accessKeyId: "07b3e5aaa9c640aa9e8dd8a88307c99a",
-      secretAccessKey: "ae6d93bc53524143b23e30224fad7b88778110820690f51e",
-      region: 'ibm',
-      endpoint: new COS.Endpoint("s3.us-east.cloud-object-storage.appdomain.cloud"),
-  };
-  const cos = new COS.S3(s3Options);
+//  let s3Options;
+//  s3Options = {
+//      accessKeyId: "07b3e5aaa9c640aa9e8dd8a88307c99a",
+//      secretAccessKey: "ae6d93bc53524143b23e30224fad7b88778110820690f51e",
+//      region: 'ibm',
+//      endpoint: new COS.Endpoint("s3.us-east.cloud-object-storage.appdomain.cloud"),
+//  };
+  let s3Config = {
+    accessKeyId: creds.cos_hmac_keys.access_key_id,
+    secretAccessKey: creds.cos_hmac_keys.secret_access_key,
+    region: 'ibm',
+    endpoint: new COS.Endpoint(cos_config.cos_endpoint_url),
+  }
+  const cos = new COS.S3(s3Config);
   console.log("connected to Cloud Object Storage");
-  var bucket = "img-server-cos-cos-standard-fza";
+//  var bucket = "img-server-cos-cos-standard-fza";
+  var bucket = cos_config.cos_bucket;
   var prefix = params.project;
   var filename = params.filename;
   var fileKey;
