@@ -14,10 +14,6 @@ var app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.get('/',(req, res, next) => {
-  res.sendFile(__dirname + '/public/background.jpg');
-});
-
 app.get('/img/:filename', async (req, res) => {
   console.log("get an image. params: ",req.params);
   var result = await image_lookup(req.params); 
@@ -32,6 +28,9 @@ app.get('/img/:project/:filename', async (req, res) => {
   res.end();
 });
 
+// serve the files out of ./public as our main files
+app.use(express.static(__dirname + '/public'));
+
 // this matches all routes and all methods i.e a centralized error handler
 app.use((req, res, next) => {
   var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
@@ -45,8 +44,10 @@ app.use((req, res, next) => {
   })
  });
 
-// serve the files out of ./public as our main files
-app.use(express.static(__dirname + '/public'));
+
+app.get('/',(req, res, next) => {
+  res.sendFile(__dirname + '/public/background.jpg');
+});
 
 //start the server
 const port = process.env.PORT || 8080;
