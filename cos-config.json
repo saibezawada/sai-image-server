@@ -1,4 +1,4 @@
 {
-    "cos_endpoint_url":"s3.us-south.cloud-object-storage.appdomain.cloud",
+    "cos_endpoint_url":"s3.us-east.cloud-object-storage.appdomain.cloud",
     "cos_bucket": "img-server-cos-cos-standard-fza"
 }

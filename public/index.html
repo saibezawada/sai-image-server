@@ -3,7 +3,7 @@
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <link rel="shortcut icon" href="favicon.png" type="image/png">
+  <link rel="shortcut icon" href="#">
   <title>Image Server</title>
  </head>
 
@@ -16,36 +16,27 @@
 
 
  <script>
-    /*
-   const COS = require('ibm-cos-sdk');
-   const creds = require('./image-store-creds.json');
-   const cos_config = require('./cos-config.json');
-   let s3Config = {
-    accessKeyId: creds.cos_hmac_keys.access_key_id,
-    secretAccessKey: creds.cos_hmac_keys.secret_access_key,
-    region: 'ibm',
-    endpoint: new COS.Endpoint(cos_config.cos_endpoint_url),
-  }
-  const cos = new COS.S3(s3Config);
-  var bucket = cos_config.cos_bucket; 
-  var fileKey = "DDNA-key.json";
-  let response;
-  try {
-    response = cos.getObject({ Bucket: bucket, Key: fileKey }).promise();
-    console.log("retrieved file: " + fileKey);
-    console.log("DDNA APIKey: ",response.Body.DDNA_APIKey);
-  } catch (err) {
-    console.log(err.message);
-    var resBody = "No such file was found in the image storage: " + fileKey;
-    console.log(resBody);
-  }
-*/
-   var SM_CONFIG = {
- //     apiKey: response.Body.DDNA_APIKey,
-     apiKey: 'eyJzb3VsSWQiOiJkZG5hLWlibV91cy1hY3RpYWMiLCJhdXRoU2VydmVyIjoiaHR0cHM6Ly9kaC5zb3VsbWFjaGluZXMuY2xvdWQvYXBpL2p3dCIsImF1dGhUb2tlbiI6ImFwaWtleV92MV9mOGUwNDQ5MC02YjdkLTQwNzYtYWZlMy1iYzc0ZDQ0NmZhMWIifQ==',
-   };
+   function sleep(milliseconds) {
+      const date = Date.now();
+      let currentDate = null;
+      do {
+         currentDate = Date.now();
+      } while (currentDate - date < milliseconds);
+   }
+   
+   window.SM_CONFIG = {};
+   (async () => {
+      const res = await fetch(`/getKey`);
+      const key = await res.text();
+      SM_CONFIG.apiKey = key;
+      console.log("after get key");
+      console.log(SM_CONFIG);
+   })();
+
+   sleep(2000);
 
    !function(){var e=window,t=document,n=t.createElement("script");n.type="text/javascript",n.async=!1,n.defer=!0,n.src="https://static.soulmachines.com/soulmachines-latest.js",n.onload=()=>{e.sm.configure(SM_CONFIG)},e.addEventListener("DOMContentLoaded",(()=>{var e=t.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)}))}();
- </script>
+ 
+   </script>
  
 </html>

@@ -8,12 +8,14 @@ var express = require('express');
 const url = require('url');
 const quertstring = require('querystring');
 const bodyParser = require('body-parser');
+var cors = require('cors');
 
 const creds = require('./image-store-creds.json');
 const cos_config = require('./cos-config.json');
 
 // create a new express server
 var app = express();
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -31,8 +33,16 @@ app.get('/img/:project/:filename', async (req, res) => {
   res.end();
 });
 
-// serve the files out of ./public as our main files
-app.use(express.static(__dirname + '/public'));
+app.get('/getKey', async (req,res) => {
+  console.log("get the DDNA APIKey");
+  var result = await getDDNAKey(); 
+  //console.log("result: ",result);
+  res.send(result);
+});
+
+app.get('/',(req, res, next) => {
+  res.sendFile(__dirname + '/public/index.html');
+});
 
 // this matches all routes and all methods i.e a centralized error handler
 app.use((req, res, next) => {
@@ -48,9 +58,10 @@ app.use((req, res, next) => {
  });
 
 
-app.get('/',(req, res, next) => {
-  res.sendFile(__dirname + '/public/background.jpg');
-});
+
+// standard serve the files out of ./public as our main files
+// will never get here due to all match route above
+app.use(express.static(__dirname + '/public'));
 
 //start the server
 const port = process.env.PORT || 8080;
@@ -62,13 +73,13 @@ app.listen(port, () => {
 async function image_lookup(params){
   // establish connection to IBM Cloud Object Storage (COS)
   const COS = require('ibm-cos-sdk');
-//  let s3Options;
-//  s3Options = {
-//      accessKeyId: "07b3e5aaa9c640aa9e8dd8a88307c99a",
-//      secretAccessKey: "ae6d93bc53524143b23e30224fad7b88778110820690f51e",
-//      region: 'ibm',
-//      endpoint: new COS.Endpoint("s3.us-east.cloud-object-storage.appdomain.cloud"),
-//  };
+
+  let s3Options = {
+      accessKeyId: "07b3e5aaa9c640aa9e8dd8a88307c99a",
+      secretAccessKey: "ae6d93bc53524143b23e30224fad7b88778110820690f51e",
+      region: 'ibm',
+      endpoint: new COS.Endpoint("s3.us-east.cloud-object-storage.appdomain.cloud"),
+  };
   let s3Config = {
     accessKeyId: creds.cos_hmac_keys.access_key_id,
     secretAccessKey: creds.cos_hmac_keys.secret_access_key,
@@ -77,6 +88,7 @@ async function image_lookup(params){
   }
   const cos = new COS.S3(s3Config);
   console.log("connected to Cloud Object Storage");
+
 //  var bucket = "img-server-cos-cos-standard-fza";
   var bucket = cos_config.cos_bucket;
   var prefix = params.project;
@@ -101,4 +113,33 @@ async function image_lookup(params){
   }
   
   return response.Body;
+}
+
+async function getDDNAKey(){
+  const COS = require('ibm-cos-sdk');
+
+  let s3Options = {
+      accessKeyId: "42bb6a3b8a1f4999adf204597a390633",
+      secretAccessKey: "e93ba7e053cd352ed6c6d799337d7d2181f693a6ac0f9470",
+      region: 'ibm',
+      endpoint: new COS.Endpoint("s3.us-east.cloud-object-storage.appdomain.cloud")   
+  }
+
+  const cos = new COS.S3(s3Options);
+
+  var bucket = "img-server-cos-cos-standard-fza"; 
+  var fileKey = "DDNA-key.json";
+  let json = "";
+
+  let response = await cos.getObject({ Bucket: bucket, Key: fileKey })
+      .promise()
+      .then(value => { 
+          json = JSON.parse(value.Body.toString());
+          console.log("DDNA APIKey: ",json.DDNA_APIKey);
+          return json.DDNA_APIKey;
+      })
+      .catch(err => { 
+          console.log(err.message);
+      });
+  return json.DDNA_APIKey;
 }
